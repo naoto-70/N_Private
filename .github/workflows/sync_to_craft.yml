@@ -20,7 +20,8 @@ jobs:
                 "title": "${{ github.event.discussion.title }}",
                 "properties": {
                   "URL": "${{ github.event.discussion.html_url }}",
-                  "Status": "${{ github.event.discussion.state }}"
+                  "Status": "${{ github.event.discussion.state }}",
+                  "Created": "${{ github.event.discussion.created_at }}"
                 }
               }
             ]
