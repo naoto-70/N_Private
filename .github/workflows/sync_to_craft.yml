@@ -1,0 +1,23 @@
+name: Sync Discussion to Craft
+on:
+  discussion:
+    types: [created, edited, closed, reopened]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send data to Craft.do
+        run: |
+          curl -X POST https://api.craft.do/v1/items \
+          -H "Authorization: Bearer ${{ secrets.CRAFT_API_TOKEN }}" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "spaceId": "${{ secrets.CRAFT_SPACE_ID }}",
+            "collectionId": "${{ secrets.CRAFT_COLLECTION_ID }}",
+            "title": "${{ github.event.discussion.title }}",
+            "properties": {
+              "URL": "${{ github.event.discussion.html_url }}",
+              "Status": "${{ github.event.discussion.state }}"
+            }
+          }'
