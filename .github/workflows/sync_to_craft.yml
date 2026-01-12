@@ -1,23 +1,27 @@
 name: Sync Discussion to Craft
+
+# Discussion の作成、編集、クローズ、再開をトリガーに設定
 on:
   discussion:
     types: [created, edited, closed, reopened]
 
 jobs:
-  sync:
+  sync_to_craft:
     runs-on: ubuntu-latest
     steps:
-      - name: Send data to Craft.do
+      - name: Send data to Craft.do via Connect API
         run: |
-          curl -X POST https://api.craft.do/v1/items \
+          curl -X POST "https://connect.craft.do/links/IMLp2tHI5fW/api/v1/collections/66A474B5-5487-432F-BAF4-A210E944A8EA/items" \
           -H "Authorization: Bearer ${{ secrets.CRAFT_API_TOKEN }}" \
           -H "Content-Type: application/json" \
           -d '{
-            "spaceId": "${{ secrets.CRAFT_SPACE_ID }}",
-            "collectionId": "${{ secrets.CRAFT_COLLECTION_ID }}",
-            "title": "${{ github.event.discussion.title }}",
-            "properties": {
-              "URL": "${{ github.event.discussion.html_url }}",
-              "Status": "${{ github.event.discussion.state }}"
-            }
+            "items": [
+              {
+                "title": "${{ github.event.discussion.title }}",
+                "properties": {
+                  "URL": "${{ github.event.discussion.html_url }}",
+                  "Status": "${{ github.event.discussion.state }}"
+                }
+              }
+            ]
           }'
