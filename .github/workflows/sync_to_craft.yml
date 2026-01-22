@@ -1,6 +1,5 @@
 name: Sync Discussion to Craft
 
-# Discussion の作成、編集、クローズ、再開をトリガーに設定
 on:
   discussion:
     types: [created, edited, closed, reopened]
@@ -18,9 +17,10 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.CRAFT_API_TOKEN }}" \
           -H "Content-Type: application/json" \
           -d '{
+            "allowNewSelectOptions": true,
             "items": [
               {
-                "title": "${{ github.event.discussion.title }}",
+                "": "${{ github.event.discussion.title }}",
                 "properties": {
                   "url": "${{ github.event.discussion.html_url }}",
                   "status": "${{ github.event.discussion.state }}",
